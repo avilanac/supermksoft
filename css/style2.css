@@ -1,0 +1,111 @@
+@import url('reset.css');
+
+
+
+/*----- Sidebar -----*/
+
+
+
+.profile-sidebar {
+  background-color: #AF180E;
+  height: 100%;
+  margin-top: 0 !important;
+}
+
+.profile-userpic {
+  text-align: center;
+  color: white;
+  padding: 20px;
+  background-color: #AF180E;
+}
+
+.profile-user {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #AF180E;
+  margin: auto;
+}
+
+.profile-name {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 10px;
+}
+
+.profile-menu {
+  margin-top: 30px;
+}
+
+.profile-menu ul li a {
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+  border-bottom: 1px;
+}
+
+ul.vertical li:first-child {
+  border-top: 1px ;
+}
+
+.profile-menu ul li ion-icon {
+  margin-left: 30px;
+  color: white;
+}
+
+.profile-menu ul li a:hover {
+  text-decoration: none;
+  
+}
+
+
+/*----- Modal1 -----*/
+
+.container button{
+  z-index: 1;
+  float: right;
+}
+
+/*----- Content -----*/
+
+#full-page {
+  background-color: #FAF7F7;
+  width: 100vw;
+}
+
+th{
+  font-weight: bold;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #5cb85c !Important;
+    border: solid 1px #5cb85c !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #5cb85c !Important;
+    border: solid 1px #5cb85c;
+}
+
+/*----- edit -----*/
+
+.col-auto a{
+  margin-left: 15px;
+}
+
+/*----- viewfact -----*/
+
+#formLogin4{
+  background-color: #ffffff;
+  width: 450px;
+  height:100%;
+  margin:auto; 
+  border: #AF180E;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+}
