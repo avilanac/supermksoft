@@ -1,12 +1,15 @@
 
 			<?php
+			session_start();
 			include("../connection/connection.php");
 
-				$sql="DELETE from temp";
-				$resultado=$connect->prepare($sql); 
-				$resultado->execute(array());
+			$doc=$_SESSION['doc'];
 
-				header("Location:invo.php");
+			$sql="DELETE from temp WHERE id_user=:er";
+			$resultado=$connect->prepare($sql); 
+			$resultado->execute(array(":er"=>$doc));
+
+			header("Location:invo.php");
 				
 			?>		
 	
