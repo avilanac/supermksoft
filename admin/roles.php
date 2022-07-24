@@ -144,7 +144,7 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
         <div class="col-md-10 col-sm-2 ">
             <div class="row py-3 ">
                 <div class="col-sm-9" id="title">
-                    <h3 class="mb-0 ">Usuarios Registrados</h3>
+                    <h3 class="mb-0 ">Roles Registrados</h3>
                 </div>
 
                 <!-- Modal Insertar -->
