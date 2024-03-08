@@ -32,7 +32,7 @@
 	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="https://kit.fontawesome.com/487a939f8b.js" crossorigin="anonymous"></script>
     <link rel="icon" href="../img/head4.png">
-    <title>Roles</title>
+    <title>Proveedores</title>
 </head>
 <body>
 <?php
@@ -41,7 +41,7 @@ include("../connection/connection.php");
 $regis = 5;
 if(isset($_GET["pagina"])){
     if($_GET["pagina"]==1){
-        header("Location:roles.php");
+        header("Location:provi.php");
     }else{
         $pagina=$_GET["pagina"];
     }
@@ -50,7 +50,7 @@ if(isset($_GET["pagina"])){
 }
 $empieza=($pagina-1)*$regis;
 
-$sql= 'SELECT * FROM users';
+$sql= 'SELECT * FROM providers';
 $senten=$connect->prepare($sql);
 $senten->execute();
 $registros=$senten->fetchALL();
@@ -60,30 +60,33 @@ $totalregis=$senten->rowCount();
 $paginas = $totalregis/$regis;
 $paginas = ceil($paginas);
 
-$regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
+$regis=$connect->query("SELECT * from providers LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
 	
 	if(isset($_POST['insert'])){
-		$idr=$_POST['idr'];
-		$rol=$_POST['rol'];
-				
+		$nit=$_POST['id'];
+		$nombre=$_POST['nom'];
+        $tel=$_POST['tel'];
+		$email=$_POST['email'];
+		$adre=$_POST['adre'];
+		
 		?>
-		<input type="number" name="idd" value="<?php echo $idu?>">
+		<input type="number" name="idd" value="<?php echo $nit?>">
 		<?php
-         $sql= "SELECT * FROM roles where id_rol = :id"; 
-         $resultado=$connect->prepare($sql);
-         $resultado->execute(array(":id"=>$idr));
-         $regi1=$resultado->fetch(PDO::FETCH_ASSOC);
- 
-         if($regi1){
-             echo "<script>alert ('Ya existe el rol')</script>";
-             echo "<script>window.location='roles.php'</script>";
-         }else{
-            $sql="INSERT INTO roles (id_rol, rol) values (:id, :ro)";
-            $resultado=$connect->prepare($sql);
-            $resultado->execute(array(":id"=>$idr, ":ro"=>$rol));
+        $sql= "SELECT * FROM providers where nit = :id"; 
+        $resultado=$connect->prepare($sql);
+        $resultado->execute(array(":id"=>$nit));
+        $regi1=$resultado->fetch(PDO::FETCH_ASSOC);
 
-            header("Location:roles.php");
-         }
+        if($regi1){
+            echo "<script>alert ('Ya existe el proveedor')</script>";
+            echo "<script>window.location='provi.php'</script>";
+        }else{
+            $sql="INSERT INTO providers (nit, namep, tel, email, adress) values (:nit, :nom, :tel, :em, :ad)";
+            $resultado=$connect->prepare($sql);//$base es el nombre de la conexión
+            $resultado->execute(array(":nit"=>$nit, ":nom"=>$nombre, ":tel"=>$tel, ":em"=>$email, ":ad"=>$adre));
+
+            header("Location:provi.php");
+        }
 	}
 	?>
 
@@ -128,22 +131,10 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
                     <nav class="profile-menu">
                         <ul class="nav navbar vertical">
                             <li class="nav-item">
-                                <ion-icon name="people-sharp"></ion-icon><a href="roles.php">Roles</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="people-sharp"></ion-icon><a href="users.php">Usuarios</a>
-                            </li>
-                            <li class="nav-item">
                                 <ion-icon name="business-sharp"></ion-icon><a href="provi.php">Proveedores</a>
                             </li>
                             <li class="nav-item">
                                 <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="person-add-sharp"></ion-icon><a href="cust.php">Clientes</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturas</a>
                             </li>
                         </ul>
                     </nav>
@@ -154,30 +145,45 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
         <div class="col-md-10 col-sm-2 ">
             <div class="row py-3 ">
                 <div class="col-sm-9" id="title">
-                    <h3 class="mb-0 ">Roles Registrados</h3>
+                    <h3 class="mb-0 ">Proveedores Registrados</h3>
                 </div>
 
                 <!-- Modal Insertar -->
                 
                 <div class="container">
-                    <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#myModal">Agregar</button>
+                    <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#myModal">Crear</button>
                     <div class="modal fade" id="myModal" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Añadir Roles</h5>
+                                    <h5 class="modal-title">Crear Proveedor</h5>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
                                 </div>
                                 <div class="modal-body">
 
                                     <form method="post">
                                         <div class="form-group">
-                                            <label for="id">Id</label>
-                                            <input type="number" required name="idr" class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
+                                            <label for="id">NIT</label>
+                                            <input type="number" name="id" required class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="id">Nombre Rol</label>
-                                            <input type="text" required name="rol" class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
+                                            <label for="id">Nombre</label>
+                                            <input type="text" name="nom" required class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="id">Teléfono</label>
+                                            <input type="number" name="tel" required class="form-control" id="exampleInputEmail1" 
+                                                        aria-describedby="emailHelp" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="id">Email</label>
+                                            <input type="email" name="email" required class="form-control" id="exampleInputEmail1" 
+                                                        aria-describedby="emailHelp" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="id">Dirección</label>
+                                            <input type="varchar" name="adre" required class="form-control" id="input3" 
+                                                        aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         
                                         <div class="modal-footer">
@@ -199,26 +205,35 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
                     <table class="table table-bordered border-danger table-striped ">
                         <thead >
                             <tr class="table-success text-center">
-                                <th>Id</th>
-                                <th>Rol</th>                                					
+                                <th>NIT</th>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Dirección</th>					
                                 <th colspan="2">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
                             <?php
                             //por cada objeto que hay dentro del array repite el código
-                            foreach ($regis as $roles) :?> 
+                            foreach ($regis as $providers) :?> 
                             <tr class="table-light" >
-                                <td><?php echo $roles->id_rol?></td>
-                                <td><?php echo $roles->rol?></td>     
+                                <td><?php echo $providers->nit?></td> 				
+                                <td><?php echo $providers->namep?></td>
+                                <td><?php echo $providers->tel?></td>
+                                <td><?php echo $providers->email?></td>
+                                <td><?php echo $providers->adress?></td>	
+
 							    <td>
-                                    <a href="roles/edit.php?id=<?php echo $roles->id_rol?> & nom=<?php echo $roles->rol?>"><button type="button" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                                    <a href="provi/edit.php?id=<?php echo $providers->nit?> & nom=<?php echo $providers->namep?> "><button type="button" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button></a>
                                 </td>
+							
                                 <td>
-                                    <a href="roles/delete.php?id=<?php echo $roles->id_rol?> & nom=<?php echo $roles->rol?>"><button type="button" class="btn btn-sm btn-danger"> <i class="fa-solid fa-trash-can"></i></button></a>
+                                    <a href="provi/delete.php?id=<?php echo $providers->nit?> & nom=<?php echo $providers->namep?>"><button type="button" class="btn btn-sm btn-danger"> <i class="fa-solid fa-trash-can"></i></button></a>
                                 </td>
+                                   
                             <?php
-                            endforeach;
+                                endforeach;
                             ?>
                             </tr>
                         </tbody>
@@ -229,17 +244,17 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item <?php echo $pagina<=1? 'disabled' : '' ?>">
-                            <a class="page-link" href="roles.php?pagina=<?php echo $pagina-1 ?>">Anterior</a>
+                            <a class="page-link" href="provi.php?pagina=<?php echo $pagina-1 ?>">Anterior</a>
                     </li>
                     <?php
                         for($i=0; $i<$paginas; $i++):?>
                             <li class="page-item <?php echo $pagina==$i+1? 'active': ''?>">
                                 <a class="page-link" 
-                                href="roles.php?pagina=<?php echo $i+1?>">
+                                href="provi.php?pagina=<?php echo $i+1?>">
                             <?php echo $i+1?></a>
                             </li>
                             <?php endfor?>
-                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="roles.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
+                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="provi.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
                 </ul>
             </nav>
             

@@ -1,3 +1,36 @@
+<?php
+	include("../../connection/connection.php");
+
+	$id=$_GET["id"];
+
+	$sql= "SELECT * FROM invoice where id_usu = :de"; 
+	$resultado=$connect->prepare($sql);
+	$resultado->execute(array(":de" => $id));
+	$usu=$resultado->fetch(PDO::FETCH_ASSOC);
+
+	$sql= "SELECT * FROM products where id_usu = :po"; 
+	$resultado=$connect->prepare($sql);
+	$resultado->execute(array(":po" => $id));
+	$pro=$resultado->fetch(PDO::FETCH_ASSOC);
+
+	if($usu){
+		echo '<script>alert("No se puede eliminar este usuario. Usuario asociado a documento o factura existente.");</script>';
+		echo '<script>window.location= "../users.php"</script>';
+	}
+	else if($pro){
+		echo '<script>alert("No se puede eliminar este usuario. Usuario asociado a documento o inventario existente.");</script>';
+		echo '<script>window.location= "../users.php"</script>';				
+	}
+	else{
+			
+		if(isset($_POST['elimina'])){
+			
+			$connect->query("DELETE FROM users WHERE id_usu='$id'");
+			echo '<script> alert ("Se borró el Usuario");</script>';
+			echo '<script>window.location="../users.php"</script>';
+		}
+	?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,38 +44,26 @@
 </head>
 <body>
 	
-	<div class="py-4 px-3 mb-4 bg-light">
-		
+	<div class="py-4 px-3 mb-4 bg-light">		
 		<h6 align="center"><?php include ("../../includes/date.php"); echo fecha();?></h6>	
 		<div class="media d-flex align-items-center"><img src="../../img/head3.png" width="150" height="100" alt="">
-
 	</div>
 	<br>
-            <form method="post">
-				<h6 align="center">Se va a eliminar un usuario. Si está seguro presione el Botón "Eliminar", de lo contrario presione "Volver".</h6><br>
-				<div class="container-fluid h-100"> 
-					<div class="row w-100 align-items-center">
-						<div class="col text-center">
-							<input type="submit" name="elimina" id="elimina" class="btn btn-danger" value="Eliminar">
-							<a href="../users.php"><input type="button" name="volver" class="btn btn-secondary" id="elimina" value="Volver"></a>
-						</div>	
-					</div>
-    			</div>			
-			</form>
-			<br>
-			<?php
-			include("../../connection/connection.php");
-
-			$id=$_GET["id"];
-			
-			if(isset($_POST['elimina'])){
-				$connect->query("DELETE FROM users WHERE id_usu='$id'");
-				echo '<script> alert ("Se borró el Usuario");</script>';
-				echo '<script>window.location="../users.php"</script>';
-	
-			}
-			?>		
-	
+				<form method="post">
+					<h6 align="center">Se va a eliminar un usuario. Si está seguro presione el Botón "Eliminar", de lo contrario presione "Volver".</h6><br>
+					<div class="container-fluid h-100"> 
+						<div class="row w-100 align-items-center">
+							<div class="col text-center">
+								<input type="submit" name="elimina" id="elimina" class="btn btn-danger" value="Eliminar">
+								<a href="../users.php"><input type="button" name="volver" class="btn btn-secondary" id="elimina" value="Volver"></a>
+							</div>	
+						</div>
+					</div>			
+				</form>
+				<br>
+	<?php
+	}
+	?>		
 		</div>
     </div>
 </body>

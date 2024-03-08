@@ -98,6 +98,12 @@
                                 <li class="nav-item">
                                     <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturar</a>
                                 </li>
+                                <li class="nav-item">
+                                    <ion-icon name="person-add-sharp"></ion-icon><a href="cust.php">Clientes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
+                                </li>
                             </ul>
                         </nav>
                     </div>

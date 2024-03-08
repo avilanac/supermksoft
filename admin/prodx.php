@@ -8,13 +8,13 @@
         $doc=$_SESSION['doc'];
         $rol=$_SESSION['rol'];
         $name=$_SESSION['nameu'];
-
-        $sql2= "SELECT * FROM roles where id_rol = :ro"; 
-        $resultado=$connect->prepare($sql2);
+        
+        $sql= "SELECT * FROM roles where id_rol = :ro"; 
+        $resultado=$connect->prepare($sql);
         $resultado->execute(array(":ro" => $rol));
-        $regi=$resultado->fetch(PDO::FETCH_ASSOC);
+        $reg=$resultado->fetch(PDO::FETCH_ASSOC);
 
-        $nomrol=$regi["rol"];
+        $nomrol=$reg["rol"];
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +38,7 @@
 <?php
 include("../connection/connection.php");
 
-$regis = 4;
+$regis = 5;
 if(isset($_GET["pagina"])){
     if($_GET["pagina"]==1){
         header("Location:prod.php");
@@ -62,17 +62,17 @@ $paginas = ceil($paginas);
 
 $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
 	
-    if(isset($_POST['insert'])){
-        $cod=$_POST['id'];
-        $prod=$_POST['prod'];
+	if(isset($_POST['insert'])){
+		$cod=$_POST['id'];
+		$prod=$_POST['prod'];
         $nit=$_POST['nit'];
-        $pri=$_POST['pre'];
+		$pri=$_POST['pre'];
         $pris=$_POST['prsale'];
-        $quant=$_POST['quant'];
+		$quant=$_POST['quant'];
         $usu=$_POST['usu'];
-        ?>
-        <input type="number" name="idd" value="<?php echo $cod?>">
-        <?php
+		?>
+		<input type="number" name="idd" value="<?php echo $cod?>">
+		<?php
         $sql= "SELECT * FROM products where cod = :id"; 
         $resultado=$connect->prepare($sql);
         $resultado->execute(array(":id"=>$cod));
@@ -82,13 +82,13 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
             echo "<script>alert ('Ya existe el producto')</script>";
             echo "<script>window.location='prod.php'</script>";
         }else{
-            $sql="INSERT INTO products (cod, prod, nit, price_buy, price_sale, quant, id_usu) values (:co, :pr, :ni, :pri, :pris, :qu, :us)";
+            $sql="INSERT INTO products (cod, prod, nit, price_buy, price_sale, inicial, quant, id_usu) values (:co, :pr, :ni, :pri,:pris, :ini, :qu,:us)";
             $resultado=$connect->prepare($sql);
-            $resultado->execute(array(":co"=>$cod, ":pr"=>$prod, ":ni"=>$nit, ":pri"=>$pri, ":pris"=>$pris, ":qu"=>$quant, ":us"=>$usu));
+            $resultado->execute(array(":co"=>$cod, ":pr"=>$prod, ":ni"=>$nit, ":pri"=>$pri, ":pris"=>$pris, ":ini"=>$quant, ":qu"=>$quant, ":us"=>$usu));
 
             header("Location:prod.php");
         }
-    }
+	}
 	?>
 
     <div class="container-fluid bcontent">
@@ -160,11 +160,11 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                 <div class="col-sm-9" id="title">
                     <h3 class="mb-0 ">Inventario de Productos</h3>
                 </div>
-
+                
                 <!-- Modal Insertar -->
                 
                 <div class="container">
-                    <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#myModal">Agregar</button>
+                    <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#myModal">Ingresar</button>
                     <div class="modal fade" id="myModal" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -174,7 +174,7 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                                 </div>
                                 <div class="modal-body">
 
-                                <form method="POST" enctype="multipart/form-data" id="formulario">
+                                    <form method="POST" enctype="multipart/form-data" id="formulario">
                                         <div class="form-group">
                                             <label for="id">Ingresado por</label>
                                             <input type="int" name="usu" readonly class="form-control" id="input" value="<?php echo $doc?>">
@@ -234,6 +234,8 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                     </div>
                 </div>  
             </div>
+            
+            <br>
             <!-- table -->
             <form method="post" autocomplete="off">
                 
@@ -247,6 +249,8 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                                 <th>Nombre</th>                                
                                 <th>$Compra</th>
                                 <th>$Venta</th>
+                                <!-- <th>Exist. Inicial</th>
+                                <th>Entrada</th> -->
                                 <th>Stock Actual</th>
                                 <th>Ingresado por</th>
                                 <th colspan="3">Acciones</th>
@@ -257,7 +261,7 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                             //por cada objeto que hay dentro del array repite el código
                             $contador=0;
                             
-                            foreach ($regis as $products) :?> 
+                            foreach ($registros as $products) :?> 
                             <?php
 							$nit=$products->nit;
 							$sql="SELECT * FROM providers WHERE nit=:id";
@@ -279,6 +283,8 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                                 <td><?php echo $products->prod ?></td>
                                 <td><?php echo $products->price_buy?></td>
                                 <td><?php echo $products->price_sale?></td>
+                                <!-- <td><?php echo $products->inicial?></td>
+                                <td><?php echo $products->entrada?></td> -->
                                 <td><?php echo $products->quant?></td>
                                 <td><?php echo $reg['nameu']?></td>
                                 <td>
@@ -318,9 +324,14 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                     <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="prod.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
                 </ul>
             </nav>
-            
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col">
+                    <strong>Cant de Productos: <?php echo $contador;?></strong> 
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
-   
 </body>
 </html>

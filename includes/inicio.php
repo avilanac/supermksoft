@@ -28,7 +28,7 @@
                         $_SESSION['nameu']=$registro['nameu'];
                     }
                 }
-                if ($registro){   
+                if ($registro && $password){   
 
                     if($_SESSION ['rol'] == 1){
                         header("Location: ../admin/admin.php");
@@ -40,13 +40,16 @@
                     }elseif ($_SESSION ['rol'] == 3){
                         header("Location: ../audi/audi.php");
                         exit();                 
-                    }else{
+                    }elseif ($_SESSION ['rol'] == 4){
                         header("Location: ../bode/bode.php");
                         exit();                 
+                    }else{
+                        header("Location: ../loginerror.php");
+                        exit();
                     }
                 }else{
-                    require("../loginerror.php");
-                    exit();
+                    echo "<script>alert ('Usuario no encontrado. Verifique los datos de ingreso.')</script>";
+                    echo "<script>window.location='../login.php'</script>";
                 }
                 $resultado->closecursor();
                 $connect->exec("set character set utf8");

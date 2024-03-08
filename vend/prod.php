@@ -130,24 +130,15 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
 
                     <!-- Sidebar menu -->
                     <nav class="profile-menu">
-                        <ul class="nav navbar vertical">
+                        <ul class="nav navbar vertical">                           
                             <li class="nav-item">
-                                <ion-icon name="people-sharp"></ion-icon><a href="roles.php">Roles</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="people-sharp"></ion-icon><a href="users.php">Usuarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="business-sharp"></ion-icon><a href="provi.php">Proveedores</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
+                                <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturar</a>
                             </li>
                             <li class="nav-item">
                                 <ion-icon name="person-add-sharp"></ion-icon><a href="cust.php">Clientes</a>
                             </li>
                             <li class="nav-item">
-                                <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturas</a>
+                                <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
                             </li>
                         </ul>
                     </nav>
@@ -160,79 +151,6 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                 <div class="col-sm-9" id="title">
                     <h3 class="mb-0 ">Inventario de Productos</h3>
                 </div>
-
-                <!-- Modal Insertar -->
-                
-                <div class="container">
-                    <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#myModal">Agregar</button>
-                    <div class="modal fade" id="myModal" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Ingresar Productos</h5>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>  
-                                </div>
-                                <div class="modal-body">
-
-                                <form method="POST" enctype="multipart/form-data" id="formulario">
-                                        <div class="form-group">
-                                            <label for="id">Ingresado por</label>
-                                            <input type="int" name="usu" readonly class="form-control" id="input" value="<?php echo $doc?>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="id">Código</label>
-                                            <input type="varchar" name="id" required required class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="id">Nombre</label>
-                                            <input type="text" name="prod" required class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
-                                        </div>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="inputGroupSelect01">Proveedor</label>
-                                            </div>
-
-                                            <select class="custom-select" required name="nit" id="inputGroupSelect01">
-                                                <?php
-                                                $sql= "SELECT * FROM providers"; 
-                                                $resultado=$connect->prepare($sql);
-                                                $resultado->execute(array());
-                                                while($registro=$resultado->fetch(PDO::FETCH_ASSOC)){
-                                                ?>
-                                                <option value="<?php echo $registro['nit'];?>"><?php echo $registro['namep']?></option>
-                                                <?php
-                                                }			
-
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="id">Precio compra</label>
-                                            <input type="number" name="pre" required class="form-control" id="exampleInputEmail1" 
-                                                        aria-describedby="emailHelp" placeholder="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="id">Precio venta</label>
-                                            <input type="number" name="prsale" required class="form-control" id="exampleInputEmail1" 
-                                                        aria-describedby="emailHelp" placeholder="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="id">Cantidad Inicial</label>
-                                            <input type="number" name="quant" required class="form-control" id="input3" 
-                                                        aria-describedby="emailHelp" placeholder="">
-                                        </div>
-                                        
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                            <input  type="submit" class="btn btn-danger w-auto me-1 mb-0" name="insert" value="Insertar" >
-                                        </div>
-                                    </form>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>  
             </div>
             <!-- table -->
             <form method="post" autocomplete="off">
@@ -249,7 +167,6 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                                 <th>$Venta</th>
                                 <th>Stock Actual</th>
                                 <th>Ingresado por</th>
-                                <th colspan="3">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
@@ -281,19 +198,8 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                                 <td><?php echo $products->price_sale?></td>
                                 <td><?php echo $products->quant?></td>
                                 <td><?php echo $reg['nameu']?></td>
-                                <td>
-                                    <a title="Nueva Entrada" href="prod/add.php?id=<?php echo $products->cod?> & nom=<?php echo $products->prod?> "><button type="button" class="btn btn-sm btn-secondary"><i class="fa-solid fa-plus"></i></button></a>
-                                </td>
-							    <td>
-                                    <a title="Editar" href="prod/edit.php?id=<?php echo $products->cod?> & nom=<?php echo $products->prod?> "><button type="button" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button></a>
-                                </td>
-                                <td>
-                                    <a title="Eliminar" href="prod/delete.php?id=<?php echo $products->cod?> & nom=<?php echo $products->prod?>"><button type="button" class="btn btn-sm btn-danger"> <i class="fa-solid fa-trash-can"></i></button></a>
-                                </td>
-                                <?php 
                                 
-                                $contador=$contador+1;                                                     
-                             
+                                <?php 
                             endforeach;
                             ?>
                             </tr>

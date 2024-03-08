@@ -18,7 +18,24 @@
 
 	</div>
 	<br>
-            <form method="post">
+			<?php
+			include("../../connection/connection.php");
+
+			$id=$_GET["id"];
+
+			$sql= "SELECT * FROM users where id_rol = :de"; 
+			$resultado=$connect->prepare($sql);
+			$resultado->execute(array(":de" => $id));
+			$usu=$resultado->fetch(PDO::FETCH_ASSOC);
+
+			if($usu){
+				echo '<script>alert("No se puede eliminar este rol. Usuario asociado.");</script>';
+				echo '<script>window.location= "../roles.php"</script>';
+			}
+			else{
+
+			?>
+			<form method="post">
 				<h6 align="center">Se va a eliminar un Rol. Si está seguro presione el Botón "Eliminar", de lo contrario presione "Volver".</h6><br>
 				<div class="container-fluid h-100"> 
 					<div class="row w-100 align-items-center">
@@ -31,15 +48,14 @@
 			</form>
 			<br>
 			<?php
-			include("../../connection/connection.php");
-
-			$id=$_GET["id"];
-			
-			if(isset($_POST['elimina'])){
-				$connect->query("DELETE FROM roles WHERE id_rol='$id'");
-				echo '<script> alert ("Se borró el rol");</script>';
-				echo '<script>window.location="../roles.php"</script>';
-	
+				if(isset($_POST['elimina'])){
+					$sql= "DELETE FROM roles WHERE id_rol=:id";
+					$resultado=$connect->prepare($sql);  //$base guarda la conexión a la base de datos
+    				$resultado->execute(array(":id"=>$id));
+					echo '<script> alert ("Se borró el rol");</script>';
+					echo '<script>window.location="../roles.php"</script>';
+		
+				}
 			}
 			?>		
 	

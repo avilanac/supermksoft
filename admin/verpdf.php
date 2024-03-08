@@ -79,6 +79,7 @@ $pdf->Cell(40, 45,('V/Total'),0, 1,'C');
 $pdf->setXY(10,112);
 
 $regisdet=$connect->query("SELECT * from detail where numb=$fact ")->fetchALL(PDO::FETCH_OBJ);		
+
 foreach ($regisdet as $products) :
 $codigo=$products->cod;
 $cantidad=$products->cantp;

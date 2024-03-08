@@ -154,8 +154,6 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                                 <th>Nombre</th>                                
                                 <th>$Compra</th>
                                 <th>$Venta</th>
-                                <th>Exist. Inicial</th>
-                                <th>Entrada</th>
                                 <th>Stock Actual</th>
                                 <th>Ingresado por</th>
                             </tr>
@@ -165,7 +163,7 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                             //por cada objeto que hay dentro del array repite el código
                             $contador=0;
                             
-                            foreach ($registros as $products) :?> 
+                            foreach ($regis as $products) :?> 
                             <?php
 							$nit=$products->nit;
 							$sql="SELECT * FROM providers WHERE nit=:id";
@@ -187,8 +185,6 @@ $regis=$connect->query("SELECT * from products LIMIT $empieza, $regis")->fetchAL
                                 <td><?php echo $products->prod ?></td>
                                 <td><?php echo $products->price_buy?></td>
                                 <td><?php echo $products->price_sale?></td>
-                                <td><?php echo $products->inicial?></td>
-                                <td><?php echo $products->entrada?></td>
                                 <td><?php echo $products->quant?></td>
                                 <td><?php echo $reg['nameu']?></td>                                
                                 <?php                                 

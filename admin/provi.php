@@ -38,7 +38,7 @@
 <?php
 include("../connection/connection.php");
 
-$regis = 7;
+$regis = 5;
 if(isset($_GET["pagina"])){
     if($_GET["pagina"]==1){
         header("Location:provi.php");
@@ -71,12 +71,22 @@ $regis=$connect->query("SELECT * from providers LIMIT $empieza, $regis")->fetchA
 		
 		?>
 		<input type="number" name="idd" value="<?php echo $nit?>">
-		<?php 
-		$sql="INSERT INTO providers (nit, namep, tel, email, adress) values (:nit, :nom, :tel, :em, :ad)";
-		$resultado=$connect->prepare($sql);//$base es el nombre de la conexión
-		$resultado->execute(array(":nit"=>$nit, ":nom"=>$nombre, ":tel"=>$tel, ":em"=>$email, ":ad"=>$adre));
+		<?php
+        $sql= "SELECT * FROM providers where nit = :id"; 
+        $resultado=$connect->prepare($sql);
+        $resultado->execute(array(":id"=>$nit));
+        $regi1=$resultado->fetch(PDO::FETCH_ASSOC);
 
-		header("Location:provi.php");
+        if($regi1){
+            echo "<script>alert ('Ya existe el proveedor')</script>";
+            echo "<script>window.location='provi.php'</script>";
+        }else{
+            $sql="INSERT INTO providers (nit, namep, tel, email, adress) values (:nit, :nom, :tel, :em, :ad)";
+            $resultado=$connect->prepare($sql);//$base es el nombre de la conexión
+            $resultado->execute(array(":nit"=>$nit, ":nom"=>$nombre, ":tel"=>$tel, ":em"=>$email, ":ad"=>$adre));
+
+            header("Location:provi.php");
+        }
 	}
 	?>
 
@@ -166,25 +176,25 @@ $regis=$connect->query("SELECT * from providers LIMIT $empieza, $regis")->fetchA
                                     <form method="post">
                                         <div class="form-group">
                                             <label for="id">NIT</label>
-                                            <input type="number" name="id" class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
+                                            <input type="number" name="id" required class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Nombre</label>
-                                            <input type="text" name="nom" class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
+                                            <input type="text" name="nom" required class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Teléfono</label>
-                                            <input type="number" name="tel" class="form-control" id="exampleInputEmail1" 
+                                            <input type="number" name="tel" required class="form-control" id="exampleInputEmail1" 
                                                         aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Email</label>
-                                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" 
+                                            <input type="email" name="email" required class="form-control" id="exampleInputEmail1" 
                                                         aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Dirección</label>
-                                            <input type="varchar" name="adre" class="form-control" id="input3" 
+                                            <input type="varchar" name="adre" required class="form-control" id="input3" 
                                                         aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         
@@ -218,7 +228,7 @@ $regis=$connect->query("SELECT * from providers LIMIT $empieza, $regis")->fetchA
                         <tbody class="text-center">
                             <?php
                             //por cada objeto que hay dentro del array repite el código
-                            foreach ($registros as $providers) :?> 
+                            foreach ($regis as $providers) :?> 
                             <tr class="table-light" >
                                 <td><?php echo $providers->nit?></td> 				
                                 <td><?php echo $providers->namep?></td>
@@ -256,7 +266,7 @@ $regis=$connect->query("SELECT * from providers LIMIT $empieza, $regis")->fetchA
                             <?php echo $i+1?></a>
                             </li>
                             <?php endfor?>
-                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="users.php?pagina=<?php echo $pagina+1 ?>">Next</a></li>
+                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="provi.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
                 </ul>
             </nav>
             

@@ -1,4 +1,4 @@
-<?php 
+<?php
     session_start();
     include("../includes/validarsession.php");
 
@@ -36,54 +36,64 @@
 </head>
 <body>
 <?php
-include("../connection/connection.php");
+    include("../connection/connection.php");
 
-$regis = 7;
-if(isset($_GET["pagina"])){
-    if($_GET["pagina"]==1){
-        header("Location:users.php");
+    $regis = 5;
+    if(isset($_GET["pagina"])){
+        if($_GET["pagina"]==1){
+            header("Location:users.php");
+        }else{
+            $pagina=$_GET["pagina"];
+        }
     }else{
-        $pagina=$_GET["pagina"];
+        $pagina=1;//muestra página en la que estamos cuando se carga por primera vez
     }
-}else{
-    $pagina=1;//muestra página en la que estamos cuando se carga por primera vez
-}
-$empieza=($pagina-1)*$regis;
+    $empieza=($pagina-1)*$regis;
 
-$sql= 'SELECT * FROM users';
-$senten=$connect->prepare($sql);
-$senten->execute();
-$registros=$senten->fetchALL();
+    $sql= 'SELECT * FROM users';
+    $senten=$connect->prepare($sql);
+    $senten->execute();
+    $registros=$senten->fetchALL();
 
-$totalregis=$senten->rowCount();
+    $totalregis=$senten->rowCount();
 
-$paginas = $totalregis/$regis;
-$paginas = ceil($paginas);
+    $paginas = $totalregis/$regis;
+    $paginas = ceil($paginas);
 
-$regis=$connect->query("SELECT * from users LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
-	
-	if(isset($_POST['insert'])){
-		$idu=$_POST['id'];
-		$rol=$_POST['rol'];
-		$nombre=$_POST['nom'];
-		$email=$_POST['email'];
-		$user=$_POST['user'];
-		$password=$_POST['pass'];
-		$pass_cifrado=password_hash($password,PASSWORD_DEFAULT,array("cost"=>12));//encripta lo que hay en la variable password
-		
-		?>
-		<input type="number" name="idd" value="<?php echo $idu?>">
-		<?php 
-		$sql="INSERT INTO users (id_usu, id_rol, nameu, email, user, pass) values (:id, :idrol, :nom, :em, :us, :ps)";
-		$resultado=$connect->prepare($sql);//$base es el nombre de la conexión
-		$resultado->execute(array(":id"=>$idu, ":idrol"=>$rol,":nom"=>$nombre, ":em"=>$email, ":us"=>$user, ":ps"=>$pass_cifrado, ));
+    $regis=$connect->query("SELECT * from users LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
+        
+        if(isset($_POST['insert'])){
+            $idu=$_POST['id'];
+            $rol=$_POST['rol'];
+            $nombre=$_POST['nom'];
+            $email=$_POST['email'];
+            $user=$_POST['user'];
+            $password=$_POST['pass'];
+            $pass_cifrado=password_hash($password,PASSWORD_DEFAULT,array("cost"=>12));
+            ?>
+            <input type="number" name="idd" value="<?php echo $idu?>">
+            <?php
 
-		header("Location:users.php");
-	}
+            $sql= "SELECT * FROM users where id_usu = :id"; 
+            $resultado=$connect->prepare($sql);
+            $resultado->execute(array(":id"=>$idu));
+            $regi=$resultado->fetch(PDO::FETCH_ASSOC);
+
+            if($regi){
+                echo "<script>alert ('Ya existe el usuario')</script>";
+                echo "<script>window.location='users.php'</script>";
+            }else{
+                $sql="INSERT INTO users (id_usu, id_rol, nameu, email, user, pass) values (:id, :idrol, :nom, :em, :us, :ps)";
+                $resultado=$connect->prepare($sql);
+                $resultado->execute(array(":id"=>$idu, ":idrol"=>$rol,":nom"=>$nombre, ":em"=>$email, ":us"=>$user, ":ps"=>$pass_cifrado));
+
+                header("Location:users.php");
+            }
+        }
 	?>
 
     <div class="container-fluid bcontent">
-        <nav class="navbar navbar-expand-lg w-100 navbar-white bg-white">
+        <nav class="navbar navbar-expand-lg w-100 navbar-white bg-white" aria-label="">
             <a class="navbar-brand" href="#">
                 <img src="../img/head3.png" width="150" height="100" alt="">
             </a>
@@ -116,7 +126,9 @@ $regis=$connect->query("SELECT * from users LIMIT $empieza, $regis")->fetchALL(P
                     <!-- Sidebar title -->
                     <div class="profile-user">
                         <div class="profile-name"><?php echo $nomrol;?></div>
-                        <div class="profile-name"><?php include ("../includes/date.php"); echo fecha();?></div>
+                        <div class="profile-name">
+                            <?php include ("../includes/date.php"); echo fecha();?>
+                        </div>
                     </div>
 
                     <!-- Sidebar menu -->
@@ -168,32 +180,32 @@ $regis=$connect->query("SELECT * from users LIMIT $empieza, $regis")->fetchALL(P
                                     <form method="post">
                                         <div class="form-group">
                                             <label for="id">Documento</label>
-                                            <input type="number" name="id" class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
+                                            <input type="number" name="id" required  class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Nombre completo</label>
-                                            <input type="text" name="nom" class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
+                                            <input type="text" name="nom" required class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Email</label>
-                                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" 
+                                            <input type="email" name="email" required class="form-control" id="exampleInputEmail1" 
                                                         aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Nombre Usuario</label>
-                                            <input type="varchar" name="user" class="form-control" id="input3" 
+                                            <input type="varchar" name="user" required class="form-control" id="input3" 
                                                         aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="id">Contaseña</label>
-                                            <input type="password" name="pass" class="form-control" id="inputPassword3" placeholder="">
+                                            <input type="password" name="pass" required class="form-control" id="inputPassword3" placeholder="">
                                         </div>
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                     <label class="input-group-text" for="inputGroupSelect01">Rol</label>
                                             </div>
 
-                                            <select class="custom-select" name="rol" id="inputGroupSelect01">
+                                            <select class="custom-select" required name="rol" id="inputGroupSelect01">
                                                 <?php
                                                 $sql= "SELECT * FROM roles"; 
                                                 $resultado=$connect->prepare($sql);
@@ -202,7 +214,7 @@ $regis=$connect->query("SELECT * from users LIMIT $empieza, $regis")->fetchALL(P
                                                 ?>
                                                 <option value="<?php echo $registro['id_rol'];?>"><?php echo $registro['rol']?></option>
                                                 <?php
-                                                }			
+                                                }
 
                                                 ?>
                                             </select>
@@ -255,7 +267,7 @@ $regis=$connect->query("SELECT * from users LIMIT $empieza, $regis")->fetchALL(P
                                     <td><?php echo /*$persona->clave*/'XXXX'?></td>
                                     
 							        <td>
-                                        <a href="user/edit.php?id=<?php echo $users->id_usu?> & nom=<?php echo $users->nameu?>  & rol=<?php echo $reg['rol']?>"><button type="button" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                                        <a href="user/edit.php?id=<?php echo $users->id_usu?> & nom=<?php echo $users->nameu?> & rol=<?php echo $reg['rol']?>"><button type="button" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button></a>
                                     </td>
 							
                                     <td>
@@ -284,7 +296,7 @@ $regis=$connect->query("SELECT * from users LIMIT $empieza, $regis")->fetchALL(P
                             <?php echo $i+1?></a>
                             </li>
                             <?php endfor?>
-                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="users.php?pagina=<?php echo $pagina+1 ?>">Next</a></li>
+                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="users.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
                 </ul>
             </nav>
             

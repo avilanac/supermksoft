@@ -15,6 +15,31 @@
         $reg=$resultado->fetch(PDO::FETCH_ASSOC);
 
         $nomrol=$reg["rol"];
+
+        $regis = 5;
+        if(isset($_GET["pagina"])){
+            if($_GET["pagina"]==1){
+                header("Location:cust.php");
+            }else{
+                $pagina=$_GET["pagina"];
+            }
+        }else{
+            $pagina=1;//muestra página en la que estamos cuando se carga por primera vez
+        }
+        $empieza=($pagina-1)*$regis;
+
+        $sql= 'SELECT * FROM customers';
+        $senten=$connect->prepare($sql);
+        $senten->execute();
+        $registros=$senten->fetchALL();
+
+        $totalregis=$senten->rowCount();
+
+        $paginas = $totalregis/$regis;
+        $paginas = ceil($paginas);
+
+        $regis=$connect->query("SELECT * from customers LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
+
 ?>
 
 <!DOCTYPE html>
@@ -32,58 +57,27 @@
 	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="https://kit.fontawesome.com/487a939f8b.js" crossorigin="anonymous"></script>
     <link rel="icon" href="../img/head4.png">
-    <title>Roles</title>
+    <title>Clientes</title>
 </head>
 <body>
 <?php
 include("../connection/connection.php");
 
-$regis = 5;
-if(isset($_GET["pagina"])){
-    if($_GET["pagina"]==1){
-        header("Location:roles.php");
-    }else{
-        $pagina=$_GET["pagina"];
-    }
-}else{
-    $pagina=1;//muestra página en la que estamos cuando se carga por primera vez
-}
-$empieza=($pagina-1)*$regis;
-
-$sql= 'SELECT * FROM users';
-$senten=$connect->prepare($sql);
-$senten->execute();
-$registros=$senten->fetchALL();
-
-$totalregis=$senten->rowCount();
-
-$paginas = $totalregis/$regis;
-$paginas = ceil($paginas);
-
-$regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
-	
 	if(isset($_POST['insert'])){
-		$idr=$_POST['idr'];
-		$rol=$_POST['rol'];
-				
+		$doc=$_POST['id'];
+		$nombre=$_POST['nom'];
+        $ape=$_POST['ape'];
+        $tel=$_POST['tel'];
+		$adre=$_POST['adre'];
+		
 		?>
-		<input type="number" name="idd" value="<?php echo $idu?>">
-		<?php
-         $sql= "SELECT * FROM roles where id_rol = :id"; 
-         $resultado=$connect->prepare($sql);
-         $resultado->execute(array(":id"=>$idr));
-         $regi1=$resultado->fetch(PDO::FETCH_ASSOC);
- 
-         if($regi1){
-             echo "<script>alert ('Ya existe el rol')</script>";
-             echo "<script>window.location='roles.php'</script>";
-         }else{
-            $sql="INSERT INTO roles (id_rol, rol) values (:id, :ro)";
-            $resultado=$connect->prepare($sql);
-            $resultado->execute(array(":id"=>$idr, ":ro"=>$rol));
+		<input type="number" name="idd" value="<?php echo $doc?>">
+		<?php 
+		$sql="INSERT INTO customers (id_cus, namec, lastna, tel, adrc) values (:doc, :nom, :ap, :tel, :ad)";
+		$resultado=$connect->prepare($sql);
+		$resultado->execute(array(":doc"=>$doc, ":nom"=>$nombre, ":ap"=>$ape, ":tel"=>$tel,  ":ad"=>$adre));
 
-            header("Location:roles.php");
-         }
+		header("Location:cust.php");
 	}
 	?>
 
@@ -126,24 +120,15 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
 
                     <!-- Sidebar menu -->
                     <nav class="profile-menu">
-                        <ul class="nav navbar vertical">
+                        <ul class="nav navbar vertical">    
                             <li class="nav-item">
-                                <ion-icon name="people-sharp"></ion-icon><a href="roles.php">Roles</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="people-sharp"></ion-icon><a href="users.php">Usuarios</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="business-sharp"></ion-icon><a href="provi.php">Proveedores</a>
-                            </li>
-                            <li class="nav-item">
-                                <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
+                                <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturas</a>
                             </li>
                             <li class="nav-item">
                                 <ion-icon name="person-add-sharp"></ion-icon><a href="cust.php">Clientes</a>
                             </li>
                             <li class="nav-item">
-                                <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturas</a>
+                                <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
                             </li>
                         </ul>
                     </nav>
@@ -154,35 +139,49 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
         <div class="col-md-10 col-sm-2 ">
             <div class="row py-3 ">
                 <div class="col-sm-9" id="title">
-                    <h3 class="mb-0 ">Roles Registrados</h3>
+                    <h3 class="mb-0 ">Clientes Registrados</h3>
                 </div>
 
                 <!-- Modal Insertar -->
                 
                 <div class="container">
-                    <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#myModal">Agregar</button>
+                    <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#myModal">Registrar</button>
                     <div class="modal fade" id="myModal" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Añadir Roles</h5>
+                                    <h5 class="modal-title">Registrar Cliente</h5>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>  
                                 </div>
                                 <div class="modal-body">
 
                                     <form method="post">
                                         <div class="form-group">
-                                            <label for="id">Id</label>
-                                            <input type="number" required name="idr" class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
+                                            <label for="id">Documento</label>
+                                            <input type="number" name="id" class="form-control" id="input1" aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="id">Nombre Rol</label>
-                                            <input type="text" required name="rol" class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
+                                            <label for="id">Nombres</label>
+                                            <input type="text" name="nom" class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="id">Apellidos</label>
+                                            <input type="text" name="ape" class="form-control" id="Input2" aria-describedby="emailHelp" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="id">Teléfono</label>
+                                            <input type="number" name="tel" class="form-control" id="exampleInputEmail1" 
+                                                        aria-describedby="emailHelp" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="id">Dirección</label>
+                                            <input type="varchar" name="adre" class="form-control" id="input3" 
+                                                        aria-describedby="emailHelp" placeholder="">
                                         </div>
                                         
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                            <input  type="submit" class="btn btn-danger w-auto me-1 mb-0" name="insert" value="Guardar" >
+                                            <input  type="submit" class="btn btn-danger w-auto me-1 mb-0" name="insert" value="Insertar" >
                                         </div>
                                     </form>
                                 </div>
@@ -199,26 +198,35 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
                     <table class="table table-bordered border-danger table-striped ">
                         <thead >
                             <tr class="table-success text-center">
-                                <th>Id</th>
-                                <th>Rol</th>                                					
+                                <th>Documento</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>					
                                 <th colspan="2">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
                             <?php
                             //por cada objeto que hay dentro del array repite el código
-                            foreach ($regis as $roles) :?> 
-                            <tr class="table-light" >
-                                <td><?php echo $roles->id_rol?></td>
-                                <td><?php echo $roles->rol?></td>     
+                            foreach ($regis as $customers) :?> 
+                            <tr class="table-light">
+                                <td><?php echo $customers->id_cus?></td> 				
+                                <td><?php echo $customers->namec?></td>
+                                <td><?php echo $customers->lastna?></td>
+                                <td><?php echo $customers->tel?></td>
+                                <td><?php echo $customers->adrc?></td>	
+
 							    <td>
-                                    <a href="roles/edit.php?id=<?php echo $roles->id_rol?> & nom=<?php echo $roles->rol?>"><button type="button" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                                    <a href="cust/edit.php?id=<?php echo $customers->id_cus?> & nom=<?php echo $customers->namec?> "><button type="button" class="btn btn-sm btn-success"><i class="fa-solid fa-pen-to-square"></i></button></a>
                                 </td>
+							
                                 <td>
-                                    <a href="roles/delete.php?id=<?php echo $roles->id_rol?> & nom=<?php echo $roles->rol?>"><button type="button" class="btn btn-sm btn-danger"> <i class="fa-solid fa-trash-can"></i></button></a>
+                                    <a href="cust/delete.php?id=<?php echo $customers->id_cus?> & nom=<?php echo $customers->namec?>"><button type="button" class="btn btn-sm btn-danger"> <i class="fa-solid fa-trash-can"></i></button></a>
                                 </td>
+                                   
                             <?php
-                            endforeach;
+                                endforeach;
                             ?>
                             </tr>
                         </tbody>
@@ -229,17 +237,17 @@ $regis=$connect->query("SELECT * from roles LIMIT $empieza, $regis")->fetchALL(P
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item <?php echo $pagina<=1? 'disabled' : '' ?>">
-                            <a class="page-link" href="roles.php?pagina=<?php echo $pagina-1 ?>">Anterior</a>
+                            <a class="page-link" href="cust.php?pagina=<?php echo $pagina-1 ?>">Anterior</a>
                     </li>
                     <?php
                         for($i=0; $i<$paginas; $i++):?>
                             <li class="page-item <?php echo $pagina==$i+1? 'active': ''?>">
                                 <a class="page-link" 
-                                href="roles.php?pagina=<?php echo $i+1?>">
+                                href="cust.php?pagina=<?php echo $i+1?>">
                             <?php echo $i+1?></a>
                             </li>
                             <?php endfor?>
-                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="roles.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
+                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="cust.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
                 </ul>
             </nav>
             

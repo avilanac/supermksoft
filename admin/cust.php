@@ -15,6 +15,31 @@
         $reg=$resultado->fetch(PDO::FETCH_ASSOC);
 
         $nomrol=$reg["rol"];
+
+        $regis = 5;
+        if(isset($_GET["pagina"])){
+            if($_GET["pagina"]==1){
+                header("Location:cust.php");
+            }else{
+                $pagina=$_GET["pagina"];
+            }
+        }else{
+            $pagina=1;//muestra página en la que estamos cuando se carga por primera vez
+        }
+        $empieza=($pagina-1)*$regis;
+
+        $sql= 'SELECT * FROM customers';
+        $senten=$connect->prepare($sql);
+        $senten->execute();
+        $registros=$senten->fetchALL();
+
+        $totalregis=$senten->rowCount();
+
+        $paginas = $totalregis/$regis;
+        $paginas = ceil($paginas);
+
+        $regis=$connect->query("SELECT * from customers LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
+
 ?>
 
 <!DOCTYPE html>
@@ -38,30 +63,6 @@
 <?php
 include("../connection/connection.php");
 
-$regis = 7;
-if(isset($_GET["pagina"])){
-    if($_GET["pagina"]==1){
-        header("Location:cust.php");
-    }else{
-        $pagina=$_GET["pagina"];
-    }
-}else{
-    $pagina=1;//muestra página en la que estamos cuando se carga por primera vez
-}
-$empieza=($pagina-1)*$regis;
-
-$sql= 'SELECT * FROM customers';
-$senten=$connect->prepare($sql);
-$senten->execute();
-$registros=$senten->fetchALL();
-
-$totalregis=$senten->rowCount();
-
-$paginas = $totalregis/$regis;
-$paginas = ceil($paginas);
-
-$regis=$connect->query("SELECT * from customers LIMIT $empieza, $regis")->fetchALL(PDO::FETCH_OBJ);
-	
 	if(isset($_POST['insert'])){
 		$doc=$_POST['id'];
 		$nombre=$_POST['nom'];
@@ -217,7 +218,7 @@ $regis=$connect->query("SELECT * from customers LIMIT $empieza, $regis")->fetchA
                         <tbody class="text-center">
                             <?php
                             //por cada objeto que hay dentro del array repite el código
-                            foreach ($registros as $customers) :?> 
+                            foreach ($regis as $customers) :?> 
                             <tr class="table-light">
                                 <td><?php echo $customers->id_cus?></td> 				
                                 <td><?php echo $customers->namec?></td>
@@ -255,7 +256,7 @@ $regis=$connect->query("SELECT * from customers LIMIT $empieza, $regis")->fetchA
                             <?php echo $i+1?></a>
                             </li>
                             <?php endfor?>
-                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="users.php?pagina=<?php echo $pagina+1 ?>">Next</a></li>
+                    <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="cust.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
                 </ul>
             </nav>
             

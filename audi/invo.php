@@ -120,7 +120,7 @@ $regis=$connect->query("SELECT * from invoice LIMIT $empieza, $regis")->fetchALL
                 <div class="col-sm-9" id="title">
                     <h3 class="mb-0 ">Facturas Generadas</h3>
                 </div><br>
-            <div class="row py-3 ">
+            
                 <!-- table -->             
                 <div class="table-responsive-xxl table-sm">
                     <table class="table table-bordered border-danger table-striped ">
@@ -204,7 +204,7 @@ $regis=$connect->query("SELECT * from invoice LIMIT $empieza, $regis")->fetchALL
                         </ul>
                     </nav>
                 </div>
-            </div>
+            
         </div>
     </section>
 </body>

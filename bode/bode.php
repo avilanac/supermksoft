@@ -74,13 +74,15 @@
 
                     <!-- Sidebar menu -->
                     <nav class="profile-menu">
-                        <ul class="nav navbar vertical">                            
+                        <ul class="nav navbar vertical">
                             <li class="nav-item">
+                                <ion-icon name="business-sharp"></ion-icon><a href="provi.php">Proveedores</a>
+                            </li><li class="nav-item">
                                 <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
                             </li>
                         </ul>
                     </nav>
                 </div>
-            </div>   
+            </div>
 </body>
 </html>

@@ -52,14 +52,12 @@
         </nav>
     </div>
     <section class="container-full">
-
+<!-- Sidebar -->
         <div class="row" id="full-page">
-
-            <!-- Sidebar -->
             <div class="col-md-2 col-sm-2">
                 <div class="profile-sidebar">
 
-                    <!-- User-->
+                    <!-- User picture -->
                     <div class="profile-userpic">
                         <h4 class="m-0"><?php echo $name;?></h4>
                     </div>
@@ -72,13 +70,20 @@
 
                     <!-- Sidebar menu -->
                     <nav class="profile-menu">
-                        <ul class="nav navbar vertical">
+                        <ul class="nav navbar vertical">    
                             <li class="nav-item">
-                                <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturar</a>
+                                <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturas</a>
+                            </li>
+                            <li class="nav-item">
+                                <ion-icon name="person-add-sharp"></ion-icon><a href="cust.php">Clientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
                             </li>
                         </ul>
                     </nav>
-                </div>
-            </div>   
+            </div>
+        </div>
+    </section>
 </body>
 </html>

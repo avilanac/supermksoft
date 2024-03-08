@@ -7,7 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<title>Update</title>
+	<title>Eliminar</title>
 </head>
 <body>
 	
@@ -18,6 +18,22 @@
 
 	</div>
 	<br>
+			<?php
+			include("../../connection/connection.php");
+
+			$id=$_GET["id"];
+			
+			$sql= "SELECT * FROM detail where cod = :de"; 
+			$resultado=$connect->prepare($sql);
+			$resultado->execute(array(":de" => $id));
+			$cod=$resultado->fetch(PDO::FETCH_ASSOC);
+
+			if($cod){
+				echo '<script>alert("No se puede eliminar este producto. Producto asociado a factura existente.");</script>';
+				echo '<script>window.location= "../prod.php"</script>';
+			}
+			else{
+			?>	
             <form method="post">
 				<h6 align="center">Se va a eliminar un producto. Si está seguro presione el Botón "Eliminar", de lo contrario presione "Volver".</h6><br>
 				<div class="container-fluid h-100"> 
@@ -31,17 +47,15 @@
 			</form>
 			<br>
 			<?php
-			include("../../connection/connection.php");
-
-			$id=$_GET["id"];
-			
-			if(isset($_POST['elimina'])){
-				$connect->query("DELETE FROM products WHERE cod='$id'");
-				echo '<script> alert ("Se borró el Usuario");</script>';
-				echo '<script>window.location="../prod.php"</script>';
-	
+				if(isset($_POST['elimina'])){
+					$sql= "DELETE FROM products WHERE cod=:id";
+					$resultado=$connect->prepare($sql);  //$base guarda la conexión a la base de datos
+    				$resultado->execute(array(":id"=>$id));
+					echo '<script> alert ("Se borró el producto");</script>';
+					echo '<script>window.location="../prod.php"</script>';
+				}
 			}
-			?>		
+			?>	
 	
 		</div>
     </div>

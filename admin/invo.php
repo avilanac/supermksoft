@@ -8,6 +8,13 @@
         $doc=$_SESSION['doc'];
         $rol=$_SESSION['rol'];
         $name=$_SESSION['nameu'];
+
+        $sql= "SELECT * FROM roles where id_rol = :ro"; 
+        $resultado=$connect->prepare($sql);
+        $resultado->execute(array(":ro" => $rol));
+        $reg=$resultado->fetch(PDO::FETCH_ASSOC);
+
+        $nomrol=$reg["rol"];
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +38,7 @@
 <?php
 include("../connection/connection.php");
 
-$regis = 7;
+$regis = 5;
 if(isset($_GET["pagina"])){
     if($_GET["pagina"]==1){
         header("Location:invo.php");
@@ -90,7 +97,7 @@ $regis=$connect->query("SELECT * from invoice LIMIT $empieza, $regis")->fetchALL
 
                     <!-- Sidebar title -->
                     <div class="profile-user">
-                        <div class="profile-name">Administrador</div>
+                        <div class="profile-name"><?php echo $nomrol;?></div>
                         <div class="profile-name"><?php include ("../includes/date.php"); echo fecha();?></div>
                     </div>
 
@@ -126,7 +133,7 @@ $regis=$connect->query("SELECT * from invoice LIMIT $empieza, $regis")->fetchALL
                 <div class="col-sm-9" id="title">
                     <h3 class="mb-0 ">Facturas Generadas</h3>
                 </div><br>
-            <div class="row py-3 ">
+            
                 <!-- table -->             
                 <div class="table-responsive-xxl table-sm">
                     <table class="table table-bordered border-danger table-striped ">
@@ -206,11 +213,11 @@ $regis=$connect->query("SELECT * from invoice LIMIT $empieza, $regis")->fetchALL
                                     <?php echo $i+1?></a>
                                     </li>
                                     <?php endfor?>
-                            <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="invo.php?pagina=<?php echo $pagina+1 ?>">Next</a></li>
+                            <li class="page-item <?php  echo $pagina>=$paginas? 'disabled' : '' ?> "><a class="page-link" href="invo.php?pagina=<?php echo $pagina+1 ?>">Siguiente</a></li>
                         </ul>
                     </nav>
                 </div>
-            </div>
+            
         </div>
     </section>
 </body>

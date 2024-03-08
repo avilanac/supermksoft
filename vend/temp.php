@@ -104,6 +104,12 @@
                                 <li class="nav-item">
                                     <ion-icon name="cart-sharp"></ion-icon><a href="invo.php">Facturar</a>
                                 </li>
+                                <li class="nav-item">
+                                    <ion-icon name="person-add-sharp"></ion-icon><a href="cust.php">Clientes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <ion-icon name="star-sharp"></ion-icon><a href="prod.php">Inventario</a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -121,8 +127,7 @@
                                     </div>
                                     <br>
                                 </div>
-                                <br>          
-                                           
+                                <br>
                                     <div class="col-auto">
                                         <div class="input-group col-md-6">
                                             <div class="input-group-prepend">
@@ -179,17 +184,24 @@
                                      <div class="col-auto">
                                         <div class="input-group col-md-6">
                                             <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="inputGroupSelect01">Producto</label>
+                                                    <label class="input-group-text" for="inputGroupSelect01">Código Producto</label>
                                             </div>
                                             <div class="input-group-prepend">
                                                     <input type="varchar" name="codi" id="codi" >
-                                            </div>                                           
+                                            </div>
+                                            <!-- Agregamos el botón al lado del input -->
+                                            <div class="input-group-append">
+                                            <a href="prod.php" target="_blank">
+                                                <button class="btn btn-danger" type="button" id="buscar">Ver códigos
+                                                </button>
+                                            </a>
+                                            </div>
                                         </div>
                                      </div>
                                     <br>
                                     <div class="col-auto">
                                         <div class="input-group col-md-6 align-items-right">
-                                            <input type="submit" name="buscarm" class="btn btn-success" id="buscar" value="Buscar">
+                                            <input type="submit" name="buscarm" class="btn btn-success" id="buscar" value="Ingresar">
                                         </div>
                                     </div>
                                     <br>
